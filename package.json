@@ -14,16 +14,15 @@
     "build": "next build",
     "start": "next start"
   },
-  "author": "Iain Collins <me@iaincollins.com>",
-  "contributors": [
-    "Balázs Orbán <info@balazsorban.com>"
-  ],
+  "author": "Coskun Cakir <hello@coskuncakir.com>",
   "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.3.11",
+    "graphql": "^15.5.0",
+    "jsonwebtoken": "^8.5.1",
     "next": "^10.0.7",
-    "next-auth": "^3.6.0",
+    "next-auth": "^3.7.0",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "sqlite3": "^5.0.2"
+    "react-dom": "^17.0.1"
   }
 }
