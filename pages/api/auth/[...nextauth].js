@@ -1,9 +1,9 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import jwt from "jsonwebtoken";
+import { initializeApollo } from "../../../lib/apollo";
+import { gql } from "@apollo/client";
 
-// For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
 export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [
@@ -12,39 +12,12 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
-  // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
-  // https://next-auth.js.org/configuration/databases
-  //
-  // Notes:
-  // * You must to install an appropriate node_module for your database
-  // * The Email provider requires a database (OAuth providers do not)
-  // database: process.env.DATABASE_URL,
-
-  // The secret should be set to a reasonably long random string.
-  // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
-  // a separate secret is defined explicitly for encrypting the JWT.
   secret: process.env.SECRET,
 
   session: {
-    // Use JSON Web Tokens for session instead of database sessions.
-    // This option can be used with or without a database for users/accounts.
-    // Note: `jwt` is automatically set to `true` if no database is specified.
     jwt: true,
-
-    // Seconds - How long until an idle session expires and is no longer valid.
-    // maxAge: 30 * 24 * 60 * 60, // 30 days
-
-    // Seconds - Throttle how frequently to write to database to extend a session.
-    // Use it to limit write operations. Set to 0 to always update the database.
-    // Note: This option is ignored if using JSON Web Tokens
-    // updateAge: 24 * 60 * 60, // 24 hours
   },
-
-  // JSON Web tokens are only used for sessions if the `jwt: true` session
-  // option is set - or by default if no database is specified.
-  // https://next-auth.js.org/configuration/options#jwt
   jwt: {
-    // A secret to use for key generation (you should set this explicitly)
     secret: process.env.SECRET,
     // Set to true to use encryption (default: false)
     // encryption: true,
@@ -55,7 +28,6 @@ export default NextAuth({
         sub: token.sub.toString(),
         name: token.name,
         email: token.email,
-        image: token.picture,
         iat: Date.now() / 1000,
         exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
         "https://hasura.io/jwt/claims": {
@@ -102,13 +74,24 @@ export default NextAuth({
     },
     async jwt(token, user, account, profile, isNewUser) {
       const isUserSignedIn = user ? true : false;
-      // make a http call to our graphql api
-      // store this in postgres
-      console.log(user.id);
+
       if (isUserSignedIn) {
-        fetch("", {
-          method: "POST",
-        });
+        const client = initializeApollo();
+        const query = gql`query findUser { users(where: {id: {_eq: "${user.id}"}}) { id } }`;
+        const { data } = await client.query({ query });
+
+        if (!data.users.length) {
+          // add user to database
+          const mutation = gql`mutation insertUser {
+            insert_users_one(object: {id: "${user.id}", name: "${user.name}", image: "${user.image}", email: "${user.email}"}) {
+              id
+              name
+              email
+              image
+            }
+          }`;
+          const { data } = await client.mutate({ mutation });
+        }
 
         token.id = user.id.toString();
       }
@@ -116,10 +99,5 @@ export default NextAuth({
     },
   },
 
-  // Events are useful for logging
-  // https://next-auth.js.org/configuration/events
-  events: {},
-
-  // Enable debug messages in the console if you are having problems
   debug: false,
 });
