@@ -5,11 +5,14 @@ import { initializeApollo } from "../../../lib/apollo";
 import { gql } from "@apollo/client";
 
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
   providers: [
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
+    }),
+    Providers.Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
   secret: process.env.SECRET,
@@ -19,56 +22,36 @@ export default NextAuth({
   },
   jwt: {
     secret: process.env.SECRET,
-    // Set to true to use encryption (default: false)
-    // encryption: true,
-    // You can define your own encode/decode functions for signing and encryption
-    // if you want to override the default behaviour.
     encode: async ({ secret, token, maxAge }) => {
       const jwtClaims = {
-        sub: token.sub.toString(),
+        sub: token.id || token.sub,
         name: token.name,
         email: token.email,
+        image: token.picture || token.image,
         iat: Date.now() / 1000,
         exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
         "https://hasura.io/jwt/claims": {
           "x-hasura-allowed-roles": ["user"],
           "x-hasura-default-role": "user",
           "x-hasura-role": "user",
-          "x-hasura-user-id": token.id,
+          "x-hasura-user-id": token.id || token.sub,
         },
       };
       const encodedToken = jwt.sign(jwtClaims, secret, { algorithm: "HS256" });
       return encodedToken;
     },
     decode: async ({ secret, token, maxAge }) => {
-      const decodedToken = jwt.verify(token, secret, { algorithms: ["HS256"] });
+      const decodedToken = jwt.verify(token, secret, { algorithm: "HS256" });
       return decodedToken;
     },
   },
-
-  // You can define custom pages to override the built-in pages.
-  // The routes shown here are the default URLs that will be used when a custom
-  // pages is not specified for that route.
-  // https://next-auth.js.org/configuration/pages
-  pages: {
-    // signIn: '/api/auth/signin',  // Displays signin buttons
-    // signOut: '/api/auth/signout', // Displays form with sign out button
-    // error: '/api/auth/error', // Error code passed in query string as ?error=
-    // verifyRequest: '/api/auth/verify-request', // Used for check email page
-    // newUser: null // If set, new users will be directed here on first sign in
-  },
-
-  // Callbacks are asynchronous functions you can use to control what happens
-  // when an action is performed.
-  // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    // async signIn(user, account, profile) { return true },
-    // async redirect(url, baseUrl) { return baseUrl },
-    async session(session, token) {
-      const encodedToken = jwt.sign(token, process.env.SECRET, {
+    async session(session, user) {
+      const encodedToken = jwt.sign(user, process.env.SECRET, {
         algorithm: "HS256",
       });
-      session.id = token.id;
+      session.id = user.sub;
+      session.user.image = user.image;
       session.token = encodedToken;
       return Promise.resolve(session);
     },
@@ -76,6 +59,7 @@ export default NextAuth({
       const isUserSignedIn = user ? true : false;
 
       if (isUserSignedIn) {
+        token.id = user.id.toString();
         const client = initializeApollo();
         const query = gql`query findUser { users(where: {id: {_eq: "${user.id}"}}) { id } }`;
         const { data } = await client.query({ query });
@@ -92,8 +76,6 @@ export default NextAuth({
           }`;
           const { data } = await client.mutate({ mutation });
         }
-
-        token.id = user.id.toString();
       }
       return Promise.resolve(token);
     },
