@@ -1,8 +1,6 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import jwt from "jsonwebtoken";
-import { initializeApollo } from "../../../lib/apollo";
-import { gql } from "@apollo/client";
 
 export default NextAuth({
   providers: [
@@ -60,13 +58,22 @@ export default NextAuth({
 
       if (isUserSignedIn) {
         token.id = user.id.toString();
-        const client = initializeApollo();
-        const query = gql`query findUser { users(where: {id: {_eq: "${user.id}"}}) { id } }`;
-        const { data } = await client.query({ query });
 
+        // check if user alread in database
+        const query = `query findUser { users(where: {id: {_eq: "${user.id}"}}) { id } }`;
+        const { data } = await fetch(process.env.GRAPHQL_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+          },
+          body: JSON.stringify({ query }),
+        })
+          .then((user) => user.json())
+          .catch((error) => console.log(error));
+
+        // if doesnt, add to db
         if (!data.users.length) {
-          // add user to database
-          const mutation = gql`mutation insertUser {
+          const mutation = `mutation insertUser {
             insert_users_one(object: {id: "${user.id}", name: "${user.name}", image: "${user.image}", email: "${user.email}"}) {
               id
               name
@@ -74,7 +81,16 @@ export default NextAuth({
               image
             }
           }`;
-          const { data } = await client.mutate({ mutation });
+
+          const { data } = await fetch(process.env.GRAPHQL_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+            },
+            body: JSON.stringify({ query: mutation }),
+          })
+            .then((user) => user.json())
+            .catch((error) => console.log(error));
         }
       }
       return Promise.resolve(token);

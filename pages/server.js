@@ -34,7 +34,6 @@ export default function Page() {
 
 // Export the `session` prop to use sessions with Server Side Rendering
 export async function getServerSideProps(context) {
-  console.log(context);
   return {
     props: {
       session: await getSession(context),

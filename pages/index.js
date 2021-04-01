@@ -1,5 +1,5 @@
 import Layout from "../components/layout";
-import { initializeApollo } from "../lib/apollo";
+import { initializeApollo } from "../lib/apolloClient";
 import { gql, useQuery } from "@apollo/client";
 
 const FETCH_USERS = gql`
@@ -40,7 +40,8 @@ export default function Page({ grudges }) {
   );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
+  console.log(context);
   const client = initializeApollo();
 
   const { data } = await client.query({
