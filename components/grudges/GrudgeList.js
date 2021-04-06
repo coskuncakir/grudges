@@ -1,9 +1,11 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
+import styles from "./GrudgeList.module.css";
+import GrudgeItem from "./GrudgeItem";
 
-const GET_MY_GRUDGES = gql`
+export const GET_MY_GRUDGES = gql`
   query fetchGrudges {
-    grudges {
+    grudges(order_by: { created_at: desc }) {
       id
       person
       reason
@@ -13,19 +15,17 @@ const GET_MY_GRUDGES = gql`
   }
 `;
 
-export default function Grudges() {
+export default function GrudgeList() {
   const { loading, error, data } = useQuery(GET_MY_GRUDGES);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
+
   return (
-    <>
+    <div className={styles.list}>
       {data.grudges.map((grudge) => (
-        <div key={grudge.id}>
-          <h3>{grudge.person}</h3>
-          <p>{grudge.reason}</p>
-        </div>
+        <GrudgeItem key={grudge.id} grudge={grudge} />
       ))}
-    </>
+    </div>
   );
 }

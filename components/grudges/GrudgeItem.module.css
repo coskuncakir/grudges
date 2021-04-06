@@ -1,0 +1,23 @@
+.item {
+  display: flex;
+  align-items: flex-start;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.detail {
+  margin-left: 1rem;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  margin: 0;
+}

@@ -1,16 +1,18 @@
+import { useEffect } from "react";
 import { useSession } from "next-auth/client";
 import Layout from "../components/layout";
 import { withApollo } from "../lib/withApollo";
-import Grudges from "../components/grudges";
 import AccessDenied from "../components/access-denied";
+import GrudgeWrapper from "../components/grudges/GrudgeWrapper";
 
 function IndexPage() {
   const [session, loading] = useSession();
 
-  // When rendering client side don't display anything until loading is complete
-  if (typeof window !== "undefined" && loading) return null;
+  useEffect(() => {
+    // When rendering client side don't display anything until loading is complete
+    if (typeof window !== "undefined" && loading) return null;
+  }, [loading]);
 
-  // If no session exists, display access denied message
   if (!session) {
     return (
       <Layout>
@@ -21,9 +23,9 @@ function IndexPage() {
 
   return (
     <Layout>
-      <Grudges />
+      <GrudgeWrapper />
     </Layout>
   );
 }
 
-export default withApollo()(IndexPage);
+export default withApollo({ ssr: true })(IndexPage);
