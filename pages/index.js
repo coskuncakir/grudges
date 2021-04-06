@@ -11,7 +11,7 @@ function IndexPage() {
   useEffect(() => {
     // When rendering client side don't display anything until loading is complete
     if (typeof window !== "undefined" && loading) return null;
-  }, [loading]);
+  }, [session]);
 
   if (!session) {
     return (
@@ -28,4 +28,4 @@ function IndexPage() {
   );
 }
 
-export default withApollo({ ssr: true })(IndexPage);
+export default withApollo()(IndexPage);

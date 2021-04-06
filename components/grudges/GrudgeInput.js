@@ -49,32 +49,35 @@ export default function GrudgeInput() {
   });
 
   return (
-    <form
-      method="post"
-      className={formLoading ? styles.formLoading : null}
-      onSubmit={(e) => {
-        e.preventDefault();
-        setFormLoading(true);
-        addGrudge({ variables: { person, reason, user_id: session.id } });
-      }}
-    >
-      <input
-        type="text"
-        name="person"
-        placeholder="Person"
-        required
-        value={person}
-        onChange={(e) => setPerson(e.target.value)}
-      />
-      <input
-        type="text"
-        name="reason"
-        placeholder="Reason"
-        required
-        value={reason}
-        onChange={(e) => setReason(e.target.value)}
-      />
-      <button type="submit">Add</button>
-    </form>
+    <div className={styles.container}>
+      <h3>Add Todo</h3>
+      <form
+        method="post"
+        className={formLoading ? styles.formLoading : null}
+        onSubmit={(e) => {
+          e.preventDefault();
+          setFormLoading(true);
+          addGrudge({ variables: { person, reason, user_id: session.id } });
+        }}
+      >
+        <input
+          type="text"
+          name="person"
+          placeholder="Person"
+          required
+          value={person}
+          onChange={(e) => setPerson(e.target.value)}
+        />
+        <input
+          type="text"
+          name="reason"
+          placeholder="Reason"
+          required
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+        />
+        <button type="submit">Add</button>
+      </form>
+    </div>
   );
 }
