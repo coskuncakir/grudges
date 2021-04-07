@@ -1,16 +1,16 @@
 .item {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   border: 1px solid #ddd;
   border-radius: 4px;
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
 }
 
-.detail {
-  margin-left: 1rem;
+.forgiven {
+  background-color: #f1fdf1;
 }
 
 .title {
@@ -20,4 +20,17 @@
 
 .description {
   margin: 0;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #ddd;
+}
+
+.footer button + button {
+  margin-left: 1rem;
 }

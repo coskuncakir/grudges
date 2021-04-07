@@ -2,7 +2,7 @@ import React from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/client";
 import styles from "./GrudgeInput.module.css";
-import { GET_MY_GRUDGES } from "./GrudgeList";
+import { GET_MY_UNFORGIVEN_GRUDGES } from "./UnforgivenGrudges";
 
 export const ADD_GRUDGE = gql`
   mutation($person: String!, $reason: String!, $user_id: String!) {
@@ -35,10 +35,12 @@ export default function GrudgeInput() {
   };
 
   const updateCache = (cache, { data }) => {
-    const existingGrudges = cache.readQuery({ query: GET_MY_GRUDGES });
+    const existingGrudges = cache.readQuery({
+      query: GET_MY_UNFORGIVEN_GRUDGES,
+    });
     const newGrudge = data.insert_grudges_one;
     cache.writeQuery({
-      query: GET_MY_GRUDGES,
+      query: GET_MY_UNFORGIVEN_GRUDGES,
       data: { grudges: [newGrudge, ...existingGrudges.grudges] },
     });
   };
@@ -50,7 +52,7 @@ export default function GrudgeInput() {
 
   return (
     <div className={styles.container}>
-      <h3>Add Todo</h3>
+      <h3>Add Grudge</h3>
       <form
         method="post"
         className={formLoading ? styles.formLoading : null}

@@ -22,9 +22,11 @@ export default function ForgivenGrudges() {
   return (
     <div>
       <h3>Forgiven grudges</h3>
-      {data.grudges.map((grudge) => (
-        <GrudgeItem key={grudge.id} grudge={grudge} />
-      ))}
+      {data.grudges.length > 0
+        ? data.grudges.map((grudge) => (
+            <GrudgeItem key={grudge.id} grudge={grudge} />
+          ))
+        : "No forgiven grudge found"}
     </div>
   );
 }

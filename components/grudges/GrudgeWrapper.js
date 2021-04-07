@@ -1,5 +1,5 @@
 import GrudgeInput from "./GrudgeInput";
-import GrudgeList from "./GrudgeList";
+import UnforgivenGrudges from "./UnforgivenGrudges";
 import ForgivenGrudges from "./ForgivenGrudges";
 import styles from "./GrudgeWrapper.module.css";
 
@@ -8,7 +8,7 @@ export default function GrudgeWrapper() {
     <div>
       <GrudgeInput />
       <div className={styles.list}>
-        <GrudgeList />
+        <UnforgivenGrudges />
         <ForgivenGrudges />
       </div>
     </div>
