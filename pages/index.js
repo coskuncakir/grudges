@@ -1,3 +1,5 @@
+import React from "react";
+import Head from "next/head";
 import { useEffect } from "react";
 import { useSession } from "next-auth/client";
 import Layout from "../components/layout";
@@ -22,9 +24,15 @@ function IndexPage() {
   }
 
   return (
-    <Layout>
-      <GrudgeWrapper />
-    </Layout>
+    <>
+      <Head>
+        <title>My Grudges</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <Layout>
+        <GrudgeWrapper />
+      </Layout>
+    </>
   );
 }
 
