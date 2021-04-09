@@ -1,3 +1,9 @@
+:root {
+  --primary: #4984ef;
+  --secondary: #4984ef;
+  --muted: rgba(29, 29, 29, 0.824);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

@@ -1,0 +1,47 @@
+.floatingForm {
+  position: relative;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 1rem;
+  appearance: none;
+  height: calc(3.5rem + 2px);
+  border: 1px solid #e7ebed;
+  color: #3e3e3f;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.input:focus,
+.input:not(:placeholder-shown) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.input::placeholder {
+  color: transparent;
+}
+
+.input:focus ~ label,
+.input:not(:placeholder-shown) ~ label {
+  color: rgba(132, 146, 166, 0.7);
+  transform: scale(0.75) translateY(-0.5rem) translateX(0.3rem);
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 1rem;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transform-origin: 0 0;
+  transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+}

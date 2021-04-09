@@ -1,0 +1,19 @@
+.container {
+  padding: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  grid-gap: 1rem;
+  align-items: center;
+}
+
+.formLoading {
+  opacity: 0.5;
+  pointer-events: none;
+}

@@ -1,26 +1,12 @@
 import React from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/client";
+import Input from "../input";
 import styles from "./GrudgeInput.module.css";
 import { GET_MY_UNFORGIVEN_GRUDGES } from "./UnforgivenGrudges";
-
-export const ADD_GRUDGE = gql`
-  mutation($person: String!, $reason: String!, $user_id: String!) {
-    insert_grudges_one(
-      object: {
-        person: $person
-        reason: $reason
-        user_id: $user_id
-        status: false
-      }
-    ) {
-      id
-      person
-      reason
-      status
-    }
-  }
-`;
+import cn from "classnames";
+import Button from "../button";
+import Title from "../title";
 
 export default function GrudgeInput() {
   const [session, sessionLoading] = useSession();
@@ -52,34 +38,52 @@ export default function GrudgeInput() {
 
   return (
     <div className={styles.container}>
-      <h3>Add Grudge</h3>
+      <Title>Add Grudge</Title>
       <form
         method="post"
-        className={formLoading ? styles.formLoading : null}
+        className={cn(styles.form, formLoading ? styles.formLoading : null)}
         onSubmit={(e) => {
           e.preventDefault();
           setFormLoading(true);
           addGrudge({ variables: { person, reason, user_id: session.id } });
         }}
       >
-        <input
-          type="text"
-          name="person"
-          placeholder="Person"
-          required
-          value={person}
-          onChange={(e) => setPerson(e.target.value)}
-        />
-        <input
+        <Input
           type="text"
           name="reason"
-          placeholder="Reason"
+          placeholder="Person"
+          value={person}
+          onChange={(e) => setPerson(e.target.value)}
           required
+        />
+        <Input
+          type="text"
+          name="person"
+          placeholder="Reason"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
+          required
         />
-        <button type="submit">Add</button>
+        <Button type="submit">ADD</Button>
       </form>
     </div>
   );
 }
+
+export const ADD_GRUDGE = gql`
+  mutation($person: String!, $reason: String!, $user_id: String!) {
+    insert_grudges_one(
+      object: {
+        person: $person
+        reason: $reason
+        user_id: $user_id
+        status: false
+      }
+    ) {
+      id
+      person
+      reason
+      status
+    }
+  }
+`;

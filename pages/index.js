@@ -5,7 +5,7 @@ import { useSession } from "next-auth/client";
 import Layout from "../components/layout";
 import { withApollo } from "../lib/withApollo";
 import AccessDenied from "../components/access-denied";
-import GrudgeWrapper from "../components/grudges/GrudgeWrapper";
+import GrudgeWrapper from "../components/grudge/GrudgeWrapper";
 
 function IndexPage() {
   const [session, loading] = useSession();

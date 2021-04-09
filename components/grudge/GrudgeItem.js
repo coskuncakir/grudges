@@ -4,6 +4,7 @@ import { GET_MY_UNFORGIVEN_GRUDGES } from "./UnforgivenGrudges";
 import { GET_MY_FORGIVEN_GRUDGES } from "./ForgivenGrudges";
 import cn from "classnames";
 import styles from "./GrudgeItem.module.css";
+import Button from "../button";
 
 export const UPDATE_GRUDGE_STATUS = gql`
   mutation($id: Int!, $status: Boolean!) {
@@ -64,12 +65,20 @@ export default function GrudgeItem({ grudge }) {
         <p className={styles.description}>{grudge.reason}</p>
       </div>
       <div className={styles.footer}>
-        <button disabled={loading} onClick={() => handleStatus(grudge)}>
+        <Button
+          disabled={loading}
+          onClick={() => handleStatus(grudge)}
+          variant="secondary"
+        >
           {grudge.status ? "Unforgive" : "Forgive"}
-        </button>
-        <button disabled={loading} onClick={() => handleDelete(grudge.id)}>
+        </Button>
+        <Button
+          disabled={loading}
+          onClick={() => handleDelete(grudge.id)}
+          variant="secondary"
+        >
           Delete
-        </button>
+        </Button>
       </div>
     </div>
   );

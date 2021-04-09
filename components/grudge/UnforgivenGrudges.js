@@ -1,6 +1,7 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import GrudgeItem from "./GrudgeItem";
+import Title from "../title";
 
 export const GET_MY_UNFORGIVEN_GRUDGES = gql`
   query fetchGrudges {
@@ -21,7 +22,7 @@ export default function UnforgivenGrudges() {
 
   return (
     <div>
-      <h3>Unforgiven grudges</h3>
+      <Title>Unforgiven grudges</Title>
       {data.grudges.length > 0
         ? data.grudges.map((grudge) => (
             <GrudgeItem key={grudge.id} grudge={grudge} />
