@@ -95,7 +95,12 @@ export default NextAuth({
       }
       return Promise.resolve(token);
     },
+    async redirect(url, baseUrl) {
+      return baseUrl;
+    },
   },
-
+  pages: {
+    signIn: "/auth/signin",
+  },
   debug: false,
 });
