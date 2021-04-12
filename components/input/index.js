@@ -4,7 +4,7 @@ export default function Input({ ...props }) {
   return (
     <div className={styles.floatingForm}>
       <input id={props.name} className={styles.input} {...props} />
-      <label for={props.name} className={styles.label}>
+      <label htmlFor={props.name} className={styles.label}>
         {props.placeholder}
       </label>
     </div>

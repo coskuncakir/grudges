@@ -23,13 +23,15 @@ function IndexPage() {
         <title>My Grudges</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Layout>
-        <Blockquote>
-          “Forgive others, not because they deserve forgiveness, but because you
-          deserve peace.” ― Jonathan Lockwood Huie
-        </Blockquote>
-        <GrudgeWrapper />
-      </Layout>
+      {session && router && (
+        <Layout>
+          <Blockquote>
+            “Forgive others, not because they deserve forgiveness, but because
+            you deserve peace.” ― Jonathan Lockwood Huie
+          </Blockquote>
+          <GrudgeWrapper />
+        </Layout>
+      )}
     </>
   );
 }
