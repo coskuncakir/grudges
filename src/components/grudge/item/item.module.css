@@ -8,6 +8,7 @@
   padding: 1rem 1rem 0.5rem 1rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  position: relative;
 }
 
 .forgiven {
@@ -34,4 +35,29 @@
 
 .footer button + button {
   margin-left: 1rem;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.loading:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  left: calc(50% - 14px);
+  top: calc(50% - 14px);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid #ccc;
+  border-top-color: #2a3b50;
+  animation: spinner 0.3s linear infinite;
 }

@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
+import { withApollo } from "../src/lib/withApollo";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useSession } from "next-auth/client";
-import Layout from "../components/layout";
-import { withApollo } from "../lib/withApollo";
-import GrudgeWrapper from "../components/grudge/GrudgeWrapper";
-import Blockquote from "../components/blockquote";
+import Layout from "../src/components/layout";
+import Blockquote from "../src/components/blockquote";
+import Grudges from "../src/components/grudge";
 
 function IndexPage() {
   const [session, loading] = useSession();
@@ -29,7 +28,7 @@ function IndexPage() {
             “Forgive others, not because they deserve forgiveness, but because
             you deserve peace.” ― Jonathan Lockwood Huie
           </Blockquote>
-          <GrudgeWrapper />
+          <Grudges />
         </Layout>
       )}
     </>

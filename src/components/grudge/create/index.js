@@ -1,14 +1,15 @@
 import React from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import Input from "../input";
-import styles from "./GrudgeInput.module.css";
-import { GET_MY_UNFORGIVEN_GRUDGES } from "./UnforgivenGrudges";
+import Input from "../../input";
+import { FETCH_UNFORGIVEN_GRUDGES } from "../../../graphql/queries";
+import { ADD_GRUDGE } from "../../../graphql/mutations";
+import Button from "../../button";
+import Title from "../../title";
 import cn from "classnames";
-import Button from "../button";
-import Title from "../title";
+import styles from "./create.module.css";
 
-export default function GrudgeInput() {
+export default function CreateGrudge() {
   const [session, sessionLoading] = useSession();
   const [person, setPerson] = React.useState("");
   const [reason, setReason] = React.useState("");
@@ -22,11 +23,11 @@ export default function GrudgeInput() {
 
   const updateCache = (cache, { data }) => {
     const existingGrudges = cache.readQuery({
-      query: GET_MY_UNFORGIVEN_GRUDGES,
+      query: FETCH_UNFORGIVEN_GRUDGES,
     });
     const newGrudge = data.insert_grudges_one;
     cache.writeQuery({
-      query: GET_MY_UNFORGIVEN_GRUDGES,
+      query: FETCH_UNFORGIVEN_GRUDGES,
       data: { grudges: [newGrudge, ...existingGrudges.grudges] },
     });
   };
@@ -69,21 +70,3 @@ export default function GrudgeInput() {
     </div>
   );
 }
-
-export const ADD_GRUDGE = gql`
-  mutation($person: String!, $reason: String!, $user_id: String!) {
-    insert_grudges_one(
-      object: {
-        person: $person
-        reason: $reason
-        user_id: $user_id
-        status: false
-      }
-    ) {
-      id
-      person
-      reason
-      status
-    }
-  }
-`;

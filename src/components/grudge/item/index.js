@@ -1,26 +1,16 @@
 import React from "react";
-import { gql, useMutation } from "@apollo/client";
-import { GET_MY_UNFORGIVEN_GRUDGES } from "./UnforgivenGrudges";
-import { GET_MY_FORGIVEN_GRUDGES } from "./ForgivenGrudges";
+import Button from "../../button";
+import { useMutation } from "@apollo/client";
+import {
+  FETCH_UNFORGIVEN_GRUDGES,
+  FETCH_FORGIVEN_GRUDGES,
+} from "../../../graphql/queries";
+import {
+  UPDATE_GRUDGE_STATUS,
+  DELETE_GRUDGE,
+} from "../../../graphql/mutations";
 import cn from "classnames";
-import styles from "./GrudgeItem.module.css";
-import Button from "../button";
-
-export const UPDATE_GRUDGE_STATUS = gql`
-  mutation($id: Int!, $status: Boolean!) {
-    update_grudges_by_pk(pk_columns: { id: $id }, _set: { status: $status }) {
-      id
-    }
-  }
-`;
-
-export const DELETE_GRUDGE = gql`
-  mutation($id: Int!) {
-    delete_grudges_by_pk(id: $id) {
-      id
-    }
-  }
-`;
+import styles from "./item.module.css";
 
 export default function GrudgeItem({ grudge }) {
   const [loading, setLoading] = React.useState(false);
@@ -31,8 +21,8 @@ export default function GrudgeItem({ grudge }) {
       variables: { id: +grudge.id, status: !grudge.status },
       optimisticResponse: true,
       refetchQueries: [
-        { query: GET_MY_FORGIVEN_GRUDGES },
-        { query: GET_MY_UNFORGIVEN_GRUDGES },
+        { query: FETCH_FORGIVEN_GRUDGES },
+        { query: FETCH_UNFORGIVEN_GRUDGES },
       ],
     });
   };
@@ -43,8 +33,8 @@ export default function GrudgeItem({ grudge }) {
       variables: { id: +id },
       optimisticResponse: true,
       refetchQueries: [
-        { query: GET_MY_FORGIVEN_GRUDGES },
-        { query: GET_MY_UNFORGIVEN_GRUDGES },
+        { query: FETCH_FORGIVEN_GRUDGES },
+        { query: FETCH_UNFORGIVEN_GRUDGES },
       ],
       onCompleted: () => setLoading(false),
     });
@@ -57,7 +47,8 @@ export default function GrudgeItem({ grudge }) {
     <div
       className={cn(
         styles.item,
-        grudge.status ? styles.forgiven : styles.unforgiven
+        grudge.status ? styles.forgiven : styles.unforgiven,
+        loading ? styles.loading : null
       )}
     >
       <div className={styles.detail}>
@@ -65,18 +56,10 @@ export default function GrudgeItem({ grudge }) {
         <p className={styles.description}>{grudge.reason}</p>
       </div>
       <div className={styles.footer}>
-        <Button
-          disabled={loading}
-          onClick={() => handleStatus(grudge)}
-          variant="secondary"
-        >
+        <Button onClick={() => handleStatus(grudge)} variant="secondary">
           {grudge.status ? "Unforgive" : "Forgive"}
         </Button>
-        <Button
-          disabled={loading}
-          onClick={() => handleDelete(grudge.id)}
-          variant="secondary"
-        >
+        <Button onClick={() => handleDelete(grudge.id)} variant="secondary">
           Delete
         </Button>
       </div>

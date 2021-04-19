@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { providers, signIn } from "next-auth/client";
-import Button from "../../components/button";
-import Title from "../../components/title";
+import Button from "../../src/components/button";
+import Title from "../../src/components/title";
 import styles from "./signin.module.css";
 
 export default function SignIn({ providers }) {

@@ -1,21 +1,11 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
-import GrudgeItem from "./GrudgeItem";
-import Title from "../title";
-
-export const GET_MY_UNFORGIVEN_GRUDGES = gql`
-  query fetchGrudges {
-    grudges(order_by: { created_at: desc }, where: { status: { _eq: false } }) {
-      id
-      person
-      reason
-      status
-    }
-  }
-`;
+import GrudgeItem from "../item";
+import Title from "../../title";
+import { FETCH_UNFORGIVEN_GRUDGES } from "../../../graphql/queries";
 
 export default function UnforgivenGrudges() {
-  const { loading, error, data } = useQuery(GET_MY_UNFORGIVEN_GRUDGES);
+  const { loading, error, data } = useQuery(FETCH_UNFORGIVEN_GRUDGES);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
