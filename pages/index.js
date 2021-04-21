@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Head from "next/head";
 import { withApollo } from "../src/lib/withApollo";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/client";
@@ -18,10 +17,6 @@ function IndexPage() {
 
   return (
     <>
-      <Head>
-        <title>My Grudges</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
       {session && router && (
         <Layout>
           <Blockquote>

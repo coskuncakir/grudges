@@ -9,7 +9,6 @@ export default function SignIn({ providers }) {
     <>
       <Head>
         <title>Login</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <section className={styles.signin}>
         <header className={styles.header}>
